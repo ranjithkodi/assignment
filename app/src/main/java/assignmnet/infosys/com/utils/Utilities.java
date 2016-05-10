@@ -10,6 +10,7 @@ import assignmnet.infosys.com.feeds.FeedDetails;
  */
 public class Utilities {
 
+    /*Method removes empty feeds from the List*/
     public static ArrayList<FeedDetails> removeEmptyFeeds(ArrayList<FeedDetails> feedList) {
         for (Iterator<FeedDetails> iterator = feedList.iterator(); iterator.hasNext(); ) {
             if (isEmptyFeedItem(iterator.next())) {

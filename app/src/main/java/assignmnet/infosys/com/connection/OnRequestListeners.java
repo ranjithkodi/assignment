@@ -9,5 +9,6 @@ import org.json.JSONObject;
  */
 public interface OnRequestListeners {
     void onRequestSuccess(JSONObject response);
+
     void onRequestFail(VolleyError volleyError);
 }

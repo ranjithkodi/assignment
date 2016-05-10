@@ -33,11 +33,13 @@ public class ContentListAdapter extends RecyclerView.Adapter<ContentListAdapter.
         feeds = new ArrayList<FeedDetails>();
     }
 
+    //Sets the Adapter Content
     public void setContent(ArrayList<FeedDetails> f) {
         this.feeds = f;
         notifyDataSetChanged();
     }
 
+    // Return the size of List Items
     @Override
     public int getItemCount() {
         return feeds.size();
@@ -63,6 +65,8 @@ public class ContentListAdapter extends RecyclerView.Adapter<ContentListAdapter.
         personViewHolder.description.setText(feeds.get(i).getDescription());
         personViewHolder.title.setText(feeds.get(i).getTitle());
         try {
+            /*Picasso library is used for downloading images. It downloads the images and will be loaded into placeholder i.e image views
+            * Showing default image if any error occurs during image download process * */
             Picasso.with(mContext).load(feeds.get(i).getImageHref()).error(R.drawable.default_image).into(personViewHolder.contentImage);
         } catch (Exception e) {
             Log.d(LiveFeedActivity.TAG, e.getMessage());

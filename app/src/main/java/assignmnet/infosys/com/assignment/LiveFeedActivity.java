@@ -44,12 +44,13 @@ public class LiveFeedActivity extends AppCompatActivity implements OnRequestList
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         //initializing Adapter
         createContentList();
-
-        //Fetching content on screen load by refreshing layout
+        //Fetching content on screen-load by refreshing SwipeRefreshLayout
         contentRefreshLayout.post(new Runnable() {
                                       @Override
                                       public void run() {
+                                          //Setting Refresh as true to display loading animation
                                           contentRefreshLayout.setRefreshing(true);
+                                          //Fetching content
                                           ContentRequester.getInstance(LiveFeedActivity.this).getContent(LiveFeedActivity.this);
                                       }
                                   }
@@ -66,23 +67,28 @@ public class LiveFeedActivity extends AppCompatActivity implements OnRequestList
         contentRecyclerView.setAdapter(contentAdapter);
     }
 
-    /*
-         Creates Content array list from JSONObject
-      */
+
     @Override
     public void onRequestSuccess(JSONObject jsonObject) {
         if (jsonObject != null) {
             try {
                 Type listType = new TypeToken<ArrayList<FeedDetails>>() {
                 }.getType();
+
+                //Setting title of toolbar based on response
                 getSupportActionBar().setTitle(jsonObject.getString(Constants.TITLE));
-                ArrayList<FeedDetails> yourList = new Gson().fromJson(jsonObject.getJSONArray(Constants.ROW).toString(), listType);
-                if (yourList != null) {
-                    contentAdapter.setContent(Utilities.removeEmptyFeeds(yourList));
+
+                /*Creates Content array list from JSONObject*/
+                ArrayList<FeedDetails> contentList = new Gson().fromJson(jsonObject.getJSONArray(Constants.ROW).toString(), listType);
+
+                if (contentList != null) {
+                    //Removing empty items from ArrayList
+                    contentAdapter.setContent(Utilities.removeEmptyFeeds(contentList));
                 }
                 contentRefreshLayout.post(new Runnable() {
                                               @Override
                                               public void run() {
+                                                  //Closing refresh animation
                                                   contentRefreshLayout.setRefreshing(false);
                                               }
                                           }
@@ -99,19 +105,21 @@ public class LiveFeedActivity extends AppCompatActivity implements OnRequestList
 
     @Override
     public void onRequestFail(VolleyError volleyError) {
+        //Showing Request fail message
         contentRefreshLayout.post(new Runnable() {
                                       @Override
                                       public void run() {
                                           contentRefreshLayout.setRefreshing(false);
-                                          showConnectionError();
+                                          showConnectionError(R.string.connection_error);
                                       }
                                   }
         );
     }
 
-    public void showConnectionError() {
+    /*Showing Connection error message in snackbar*/
+    public void showConnectionError(int resourceID) {
         Snackbar snackbar = Snackbar
-                .make(findViewById(R.id.main_layout), R.string.connection_error, Snackbar.LENGTH_LONG).setAction(R.string.retry, new View.OnClickListener() {
+                .make(findViewById(R.id.main_layout), resourceID, Snackbar.LENGTH_LONG).setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         contentRefreshLayout.setRefreshing(true);
@@ -131,6 +139,12 @@ public class LiveFeedActivity extends AppCompatActivity implements OnRequestList
         ContentRequester.getInstance(LiveFeedActivity.this).getContent(LiveFeedActivity.this);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //Cancelling all content requests on stop
+        ContentRequester.getInstance(LiveFeedActivity.this).cancelAllRequests();
+    }
 
     @Override
     protected void onDestroy() {

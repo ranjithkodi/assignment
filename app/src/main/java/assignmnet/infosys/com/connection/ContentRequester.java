@@ -21,6 +21,7 @@ public class ContentRequester {
 
     private static ContentRequester mInstance;
     RequestQueue contentRequestQueue;
+    public static final String TAG = "ContentRequest";
 
     private ContentRequester(Context context) {
         contentRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
@@ -37,7 +38,7 @@ public class ContentRequester {
 
 
     public void getContent(final OnRequestListeners listener) {
-        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, Constants.FEED_URL, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Constants.FEED_URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 listener.onRequestSuccess(response);
@@ -50,12 +51,19 @@ public class ContentRequester {
             }
         });
 
+        jsonObjectRequest.setTag(TAG);
 
-        getContentRequestQueue().add(jor);
+        getContentRequestQueue().add(jsonObjectRequest);
     }
 
     public RequestQueue getContentRequestQueue() {
         return contentRequestQueue;
+    }
+
+    public void cancelAllRequests() {
+        if (contentRequestQueue != null) {
+            contentRequestQueue.cancelAll(TAG);
+        }
     }
 
 }
