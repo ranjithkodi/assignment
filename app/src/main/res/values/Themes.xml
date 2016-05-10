@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ToolBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--If you are using revision 22.1 please use just windowNoTitle. Without android:-->
+        <item name="android:windowNoTitle">true</item>
+        <!--We will be using the toolbar so no need to show ActionBar-->
+        <item name="android:windowActionBar">false</item>
+        <item name="actionMenuTextColor">#ff0000</item>
+        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="android:textColorSecondary">#ffffff</item>
+        <!-- You can also set colorControlNormal, colorControlActivated
+            colorControlHighlight and colorSwitchThumbNormal. -->
+
+    </style>
+
+</resources>

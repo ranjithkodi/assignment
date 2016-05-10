@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="content_card_title_color">#3B5DB6</color>
+    <color name="snackbar_button_text_color">#3B5DB6</color>
+    <color name="blue">#1565C0</color>
+  </resources>
